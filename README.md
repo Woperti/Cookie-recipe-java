@@ -1,4 +1,143 @@
-# Cookie-recipe-java
+## Modelo vista controlador
+Es un patron de diseno de software que separa una aplicacion en tres componentes interracionados. Este patron ayuda a organizar el codigo de manera
+que sea mas modular, manteniendo la logica de la aplicacion y la interfaz grafica separadas.
+
+Componentes de MVC:
+Modelo (Model):
+
+Qué es?: El modelo es la parte de la aplicación que maneja la lógica de los datos y las reglas de negocio. Es responsable de almacenar y gestionar la información.
+Ejemplo: Si estuviéramos creando una aplicación de gestión de estudiantes, el modelo sería la clase que maneja los datos del estudiante (nombre, matrícula, calificaciones, etc.).
+Vista (View):
+
+Qué es?: La vista es la parte de la aplicación que se encarga de mostrar los datos al usuario. Generalmente, la vista es la interfaz gráfica o los formularios que el usuario utiliza para interactuar con la aplicación.
+Ejemplo: En un programa de Java Swing, los botones, etiquetas y cuadros de texto son parte de la vista.
+Controlador (Controller):
+
+Qué es?: El controlador actúa como intermediario entre el modelo y la vista. Recibe las entradas del usuario (a través de la vista), las procesa y actualiza el modelo. También puede actualizar la vista cuando los datos del modelo cambian.
+Ejemplo: Si el usuario hace clic en un botón para guardar los datos de un estudiante, el controlador es responsable de tomar esa acción, comunicarse con el modelo y luego actualizar la vista.
+
+Ejemplo: Modelo -> Student.java
+
+```Java
+public class Student {
+    private String name;
+    private int age;
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // Getters y Setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+```
+Vista: StudentView.java
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class StudentView extends JFrame {
+    private JTextField nameField = new JTextField(20);
+    private JTextField ageField = new JTextField(20);
+    private JButton saveButton = new JButton("Guardar");
+
+    public StudentView() {
+        // Configuración de la ventana
+        setTitle("Formulario de Estudiante");
+        setLayout(new GridLayout(3, 2));
+
+        // Agregar los componentes al formulario
+        add(new JLabel("Nombre:"));
+        add(nameField);
+        add(new JLabel("Edad:"));
+        add(ageField);
+        add(saveButton);
+
+        // Configurar tamaño y visibilidad
+        pack();
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    // Métodos para obtener los datos del formulario
+    public String getStudentName() {
+        return nameField.getText();
+    }
+
+    public int getStudentAge() {
+        return Integer.parseInt(ageField.getText());
+    }
+
+    public JButton getSaveButton() {
+        return saveButton;
+    }
+}
+```
+
+controller: StudentController.java
+
+```Java
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class StudentController {
+    private Student model;
+    private StudentView view;
+
+    public StudentController(Student model, StudentView view) {
+        this.model = model;
+        this.view = view;
+
+        // Añadir el ActionListener al botón guardar
+        this.view.getSaveButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.setName(view.getStudentName());
+                model.setAge(view.getStudentAge());
+                JOptionPane.showMessageDialog(null, "Datos Guardados: " +
+                        "\nNombre: " + model.getName() +
+                        "\nEdad: " + model.getAge());
+            }
+        });
+    }
+}
+```
+Main.java
+```java
+public class Main {
+    public static void main(String[] args) {
+        // Crear el modelo
+        Student student = new Student("", 0);
+
+        // Crear la vista
+        StudentView view = new StudentView();
+
+        // Crear el controlador
+        StudentController controller = new StudentController(student, view);
+    }
+}
+```
+Modelo (Student.java): Aquí almacenamos el nombre y la edad del estudiante.
+Vista (StudentView.java): Esta clase es responsable de mostrar el formulario al usuario y obtener los datos introducidos en los campos de texto.
+Controlador (StudentController.java): Actúa como intermediario, toma la información de la vista (cuando el usuario hace clic en el botón "Guardar") y actualiza el modelo con los datos del estudiante.
+
+## Cookie-recipe-java usando el patron MVC
+
 Melany tiene una idea de negocio basada en su habilidad para cocinar deliciosas galletas, utilizando una receta especial de su familia. Sus galletas son tan buenas que todo el mundo que las prueba asegura que son las mejores que han comido.
 
 Melany cuenta con un presupuesto inicial de 15,000 pesos para comenzar su negocio de venta de galletas por docenas. Ella decide compartir su idea con sus amigas Aline y Sofía, quienes también están dispuestas a invertir 15,000 pesos cada una, a cambio de una parte igual de las ganancias.
